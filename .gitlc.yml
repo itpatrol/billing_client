@@ -1,0 +1,9 @@
+deploy:
+  master:
+    server: karma.vps-private.net
+    username: billingclient
+    dir: '{home}/github/itpatrol/billing_client/{branch}'
+    env_vars:
+      domain: billingclient.vps-private.net
+    scripts:
+      init: '{home}/scripts/module_init.sh'
