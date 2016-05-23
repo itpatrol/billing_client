@@ -1,0 +1,5 @@
+name = Billing Client
+description = Client to work with Billing Service.
+package = "Commerce"
+
+core = 7.x
