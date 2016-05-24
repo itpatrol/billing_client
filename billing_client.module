@@ -79,7 +79,8 @@ function billing_client_user_update(&$edit, $account, $category) {
  * Implements hook_user_delete().
  */
 function billing_client_user_delete($account) {
-//  billing_client_call_service('user_sync', $account);
+  $request[':name'] = $account->original->name;
+  billing_client_delete('user/:name', $request);
 }
 
 
@@ -91,6 +92,37 @@ function billing_client_get($url, $params = array()) {
   billing_client_prepareCommand($url, $params);
   $options = array(
     'method' => 'GET',
+    'headers' => array(
+      'Content-Type' => 'application/json',
+      'Accept' => '*/*',
+      'User-Agent' => 'Billing Client module for Drupal',
+      'Token' => variable_get('billing_client_token'),
+    )
+  );
+  $url = variable_get('billing_client_api_url') . '/' . $url;
+  $answer = drupal_http_request($url, $options);
+  if($answer->code == '200'){
+    if(!empty($answer->data)){
+      return json_decode($answer->data, TRUE);
+    }
+    return $answer->status_message;
+  }
+  else{
+    if(isset($answer->error)){
+      return $answer->error;
+    }
+    return FALSE;
+  }
+}
+
+/**
+ * Client gateways .
+ */
+function billing_client_delete($url, $params = array()) {
+  
+  billing_client_prepareCommand($url, $params);
+  $options = array(
+    'method' => 'DELETE',
     'headers' => array(
       'Content-Type' => 'application/json',
       'Accept' => '*/*',
