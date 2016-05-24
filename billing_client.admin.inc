@@ -72,8 +72,10 @@ function billing_client_users($form, &$form_state) {
   $status = array(t('blocked'), t('active'));
   $roles = array_map('check_plain', user_roles(TRUE));
   $accounts = array();
+  
   foreach ($result as $account) {
     $users_roles = array();
+    $accounts[$account->name] = $account; 
     $roles_result = db_query('SELECT rid FROM {users_roles} WHERE uid = :uid', array(':uid' => $account->uid));
     foreach ($roles_result as $user_role) {
       $users_roles[] = $roles[$user_role->rid];
@@ -94,6 +96,8 @@ function billing_client_users($form, &$form_state) {
       'access' => $account->access ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->access))) : t('never'),
     );
   }
+  
+  $form_state['accounts'] = $accounts;
 
   $form['accounts'] = array(
     '#type' => 'tableselect',
@@ -117,4 +121,5 @@ function billing_client_users($form, &$form_state) {
 function billing_client_users_submit($form, &$form_state) {
   $accounts = array_filter($form_state['values']['accounts']);
   drupal_set_message('<pre>'. print_r($form_state['values']['accounts'],true). '</pre>');
+  drupal_set_message('<pre>'. print_r($form_state['accounts'],true). '</pre>');
 }
