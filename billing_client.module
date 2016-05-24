@@ -63,7 +63,7 @@ function billing_client_user_login(&$edit, $account) {
 
 function billing_client_store_token($uid, $token, $expire) {
   $access_token = db_select('billing_client_tokens', 'bct')
-    ->fields('bau')
+    ->fields('bct')
     ->condition('access_token', $token)
     ->execute()
     ->fetchObject();
