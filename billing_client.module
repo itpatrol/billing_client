@@ -65,7 +65,18 @@ function billing_client_get($url, $params = array()) {
   );
   $url = variable_get('billing_client_api_url') . '/' . $url;
   $answer = drupal_http_request($url, $options);
-  return $answer;
+  if($answer->code == '200'){
+    if(!empty($answer->data)){
+      return json_decode($answer->data, TRUE);
+    }
+    return $answer->status_message;
+  }
+  else{
+    if(isset($answer->error)){
+      return $answer->error;
+    }
+    return FALSE;
+  }
 }
 
 
