@@ -74,7 +74,7 @@ function billing_client_goto() {
   
   $website = variable_get('billing_client_website_url', FALSE);
   
-  if(!empty($website)) {
+  if(empty($website)) {
     return t('Billing is not available temporary. Please contact support.');
   }
  
