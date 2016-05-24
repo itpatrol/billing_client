@@ -41,8 +41,14 @@ function billing_client_users($form, &$form_state) {
   $remote_users = billing_client_get('users');
   
   $synced_users = array();
-  foreach($remote_users as $user) {
-    $synced_users[$user['name']] = $user;
+  
+  if($remote_users){
+    foreach($remote_users as $user) {
+      $synced_users[$user['name']] = $user;
+    }
+  }
+  else{
+    drupal_set_message(t('Check API connection'), 'error');
   }
   
   $form_state['synced_users'] = $synced_users;
