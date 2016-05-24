@@ -27,6 +27,11 @@ function billing_client_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'expire' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
     'primary key' => array('uid'),
   );
@@ -54,6 +59,11 @@ function billing_client_update_7101() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
+      ),
+      'expire' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
       ),
     ),
     'primary key' => array('uid'),
