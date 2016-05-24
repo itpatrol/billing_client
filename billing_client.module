@@ -79,7 +79,7 @@ function billing_client_user_update(&$edit, $account, $category) {
  * Implements hook_user_delete().
  */
 function billing_client_user_delete($account) {
-  $request[':name'] = $account->original->name;
+  $request[':name'] = $account->name;
   billing_client_delete('user/:name', $request);
 }
 
