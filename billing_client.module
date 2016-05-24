@@ -129,7 +129,7 @@ function billing_client_store_token($uid, $token, $expire) {
       ->execute();
   }
   else{
-      db_update('billing_api_users')
+      db_update('billing_client_tokens')
       ->fields(
           array(
             'expire' => $expire,
