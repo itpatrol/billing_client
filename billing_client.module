@@ -1,0 +1,79 @@
+<?php
+/**
+ * @file
+ * Billing client module.
+ *
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function billing_client_menu() {
+  $items = array();
+
+  $items['admin/config/billing_client'] = array(
+    'title' => 'Create site',
+    'description' => 'Settings for create site.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('billing_client_settings'),
+    'access arguments' => array('administer site configuration'),
+  );
+
+  return $items;
+}
+
+
+/**
+ * Paths to the files.
+ */
+function billing_client_settings($form, &$form_state) {
+  if(variable_get('billing_client_token')){
+    $answer = billing_client_get('ping');
+  drupal_set_message('<pre>' . print_r($answer) .'</pre>');
+  }
+  $form['billing_client_token'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Token'),
+    '#default_value' => variable_get('billing_client_token'),
+  );
+
+  $form['billing_client_api_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Billing API url'),
+    '#default_value' => variable_get('billing_client_api_url'),
+  );
+
+
+  return system_settings_form($form);
+}
+
+/**
+ * Client gateway .
+ */
+
+function billing_client_get($url, $params = array()) {
+  
+  billing_client_prepareCommand($url, $params);
+  $options = array(
+    'method' => 'GET',
+    'headers' => array(
+      'Content-Type' => 'application/json',
+      'Accept' => '*/*',
+      'User-Agent' => 'Billing Client module for Drupal',
+      'Token' => variable_get('billing_client_token'),
+    )
+  );
+  $url = variable_get('billing_client_api_url') . '/' . $url;
+  $answer = drupal_http_request($url, $options);
+  return $answer;
+}
+
+
+function billing_client_prepareCommand(&$command, &$params) {
+  foreach($params as $key => $val){
+    if($key[0] == ':'){
+      $command = str_replace($key, $val, $command);
+      unset($params[$key]);
+    }
+  }
+}
