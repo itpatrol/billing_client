@@ -50,13 +50,46 @@ function billing_client_menu() {
  * Implements hook_user_login().
  */
 function billing_client_user_login(&$edit, $account) {
-  $session_key = billing_client_get('user/:name', 
+  $session_token = billing_client_get('user/:name', 
     array(
       ':name' => $account->name,
     ));
-  drupal_set_message('<pre>' . print_r($session_key,true) . '</pre>');
+  if(is_array($session_token)) {
+    billing_client_store_token($account->uid, $session_token['access_token'], $session_token['expire']);
+  }
+  
+  
 }
 
+function billing_client_store_token($uid, $token, $expire) {
+  $access_token = db_select('billing_client_tokens', 'bct')
+    ->fields('bau')
+    ->condition('access_token', $token)
+    ->execute()
+    ->fetchObject();
+    
+  if(!$access_token){
+    // generate new token.
+    db_insert('billing_client_tokens')
+      ->fields(array(
+        'uid' => $uid,
+        'expire' => $expire,
+        'access_token' => $token,
+      ))
+      ->execute();
+  }
+  else{
+      db_update('billing_api_users')
+      ->fields(
+          array(
+            'expire' => $expire,
+            'access_token' => $token,
+          )
+      )
+      ->condition('uid', $uid)
+      ->execute(); 
+  }
+}
 
 
 
