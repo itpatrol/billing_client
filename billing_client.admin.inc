@@ -30,6 +30,12 @@ function billing_client_settings($form, &$form_state) {
     '#default_value' => variable_get('billing_client_api_url'),
   );
 
+  $form['billing_client_website_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Billing website url'),
+    '#default_value' => variable_get('billing_client_website_url'),
+  );
+
 
   return system_settings_form($form);
 }

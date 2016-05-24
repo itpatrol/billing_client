@@ -71,6 +71,12 @@ function billing_client_menu() {
  */
 function billing_client_goto() {
   global $user;
+  
+  $website = variable_get('billing_client_website_url', FALSE);
+  
+  if($website) {
+    return t('Billing is not available temporary. Please contact support.');
+  }
  
   $access_token = db_select('billing_client_tokens', 'bct')
     ->fields('bct')
@@ -87,12 +93,12 @@ function billing_client_goto() {
     if(is_array($session_token)) {
       billing_client_store_token($user->uid, $session_token['access_token'], $session_token['expire']);
       
-      drupal_goto('http://billing.' . $_SERVER['SERVER_NAME'] . '/billing/login/' . $session_token['access_token']);
+      drupal_goto($website . '/billing/login/' . $session_token['access_token']);
     }
     return t('Billing is not available temporary. Please contact support.');
   }
   
-  drupal_goto('http://billing.' . $_SERVER['SERVER_NAME'] . '/billing/login/' . $access_token->access_token);
+  drupal_goto($website . '/billing/login/' . $access_token->access_token);
   
 }
 
