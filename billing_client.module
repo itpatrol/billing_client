@@ -11,46 +11,40 @@
 function billing_client_menu() {
   $items = array();
 
-  $items['admin/config/billing_client'] = array(
-    'title' => 'Create site',
-    'description' => 'Settings for create site.',
+  $items['admin/config/system/billing_client'] = array(
+    'title' => 'Billing Client settings',
+    'description' => 'Configure Billing API integration.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('billing_client_settings'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'billing_client.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['admin/config/system/billing_client/settings'] = array(
+    'title' => 'Billing Client settings',
+    'description' => 'Configure Billing API integration.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('billing_client_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'billing_client.admin.inc',
+
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['admin/config/system/billing_client/users'] = array(
+    'title' => 'Billing Client Users',
+    'description' => 'Synchronize selected users.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('billing_client_users'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'billing_client.admin.inc',
+    'type' => MENU_LOCAL_TASK,
   );
 
   return $items;
 }
 
-
-/**
- * Paths to the files.
- */
-function billing_client_settings($form, &$form_state) {
-  if(variable_get('billing_client_token')){
-    $answer = billing_client_get('ping');
-    if(isset($answer['message'])){
-      drupal_set_message(t('API is online'));
-    }
-    else{
-      drupal_set_message(t('API is offline'), 'error');
-    }
-  }
-  $form['billing_client_token'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Token'),
-    '#default_value' => variable_get('billing_client_token'),
-  );
-
-  $form['billing_client_api_url'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Billing API url'),
-    '#default_value' => variable_get('billing_client_api_url'),
-  );
-
-
-  return system_settings_form($form);
-}
 
 
 /**
@@ -85,10 +79,10 @@ function billing_client_user_delete($account) {
 
 
 /**
- * Client gateways .
+ * Send GET request.
  */
 function billing_client_get($url, $params = array()) {
-  
+
   billing_client_prepareCommand($url, $params);
   $options = array(
     'method' => 'GET',
@@ -116,10 +110,10 @@ function billing_client_get($url, $params = array()) {
 }
 
 /**
- * Client gateways .
+ * Send DELETE request.
  */
 function billing_client_delete($url, $params = array()) {
-  
+
   billing_client_prepareCommand($url, $params);
   $options = array(
     'method' => 'DELETE',
@@ -146,8 +140,11 @@ function billing_client_delete($url, $params = array()) {
   }
 }
 
+/**
+ * Send POST request.
+ */
 function billing_client_post($url, $params = array()) {
-  
+
   billing_client_prepareCommand($url, $params);
   $options = array(
     'method' => 'POST',
@@ -175,8 +172,11 @@ function billing_client_post($url, $params = array()) {
   }
 }
 
+/**
+ * Send PUT request.
+ */
 function billing_client_put($url, $params = array()) {
-  
+
   billing_client_prepareCommand($url, $params);
   $options = array(
     'method' => 'PUT',
@@ -204,7 +204,9 @@ function billing_client_put($url, $params = array()) {
   }
 }
 
-
+/**
+ * Replace all :name in $url with data from $params.
+ */
 function billing_client_prepareCommand(&$command, &$params) {
   foreach($params as $key => $val){
     if($key[0] == ':'){
