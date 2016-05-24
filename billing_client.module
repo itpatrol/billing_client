@@ -46,6 +46,19 @@ function billing_client_menu() {
 }
 
 
+/**
+ * Implements hook_user_login().
+ */
+function billing_client_user_login(&$edit, $account) {
+  $session_key = billing_client_get('user/:name', 
+    array(
+      ':name' => $account->name,
+    ));
+  drupal_set_message('<pre>' . print_r($session_key,true) . '</pre>');
+}
+
+
+
 
 /**
  * Implements hook_user_insert().
