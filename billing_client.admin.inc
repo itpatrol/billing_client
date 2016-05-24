@@ -39,7 +39,13 @@ function billing_client_settings($form, &$form_state) {
  */
 function billing_client_users($form, &$form_state) {
   $remote_users = billing_client_get('users');
-  drupal_set_message('<pre>'. print_r($remote_users,true). '</pre>');
+  
+  $synced_users = array();
+  foreach($remote_users as $user) {
+    $synced_users[$user['name']] = $user;
+  }
+  
+  drupal_set_message('<pre>'. print_r($synced_users,true). '</pre>');
   
   $header = array(
     'username' => array('data' => t('Username'), 'field' => 'u.name'),
@@ -74,10 +80,16 @@ function billing_client_users($form, &$form_state) {
       $users_roles[] = $roles[$user_role->rid];
     }
     asort($users_roles);
+    
+    $sync_status = t('Not synced');
+    
+    if(isset($synced_users[$account->name])) {
+      $sync_status = t('Synced');
+    }
 
     $options[$account->uid] = array(
       'username' => theme('username', array('account' => $account)),
-      'status' => $status[$account->status],
+      'status' => $status[$account->status] . ' / ' . $sync_status,
       'roles' => theme('item_list', array('items' => $users_roles)),
       'member_for' => format_interval(REQUEST_TIME - $account->created),
       'access' => $account->access ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->access))) : t('never'),
