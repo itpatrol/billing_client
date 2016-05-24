@@ -1,0 +1,63 @@
+<?php
+/**
+ * @file
+ * Installation file for billing_client_client.module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function billing_client_schema() {
+  // Ensure translations don't break during installation.
+  $t = get_t();
+
+  $schema = array();
+
+  $schema['billing_client_tokens'] = array(
+    'description' => $t('Users session key.'),
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'access_token' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Users session key table.
+ */
+function billing_client_update_7101() {
+  // Ensure translations don't break during installation.
+  $t = get_t();
+
+  $schema = array(
+    'description' => $t('Users session key.'),
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'access_token' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('uid'),
+  );
+
+  db_create_table('billing_client_tokens', $schema);
+}
