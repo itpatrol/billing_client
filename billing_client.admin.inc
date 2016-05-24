@@ -47,9 +47,6 @@ function billing_client_users($form, &$form_state) {
       $synced_users[$user['name']] = $user;
     }
   }
-  else{
-    drupal_set_message(t('Check API connection'), 'error');
-  }
   
   $form_state['synced_users'] = $synced_users;
   
