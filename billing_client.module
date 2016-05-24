@@ -52,10 +52,35 @@ function billing_client_settings($form, &$form_state) {
   return system_settings_form($form);
 }
 
-/**
- * Client gateway .
- */
 
+/**
+ * Implements hook_user_insert().
+ */
+function billing_client_user_insert(&$edit, $account, $category) {
+  $request['name'] = $account->name;
+  $request['email'] = $account->mail;
+  $request['pass'] = $account->status;
+  billing_client_post('user', $request);
+}
+
+/**
+ * Implements hook_user_update().
+ */
+function billing_client_user_update(&$edit, $account, $category) {
+//  billing_client_call_service('user_sync', $account);
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function billing_client_user_delete($account) {
+//  billing_client_call_service('user_sync', $account);
+}
+
+
+/**
+ * Client gateways .
+ */
 function billing_client_get($url, $params = array()) {
   
   billing_client_prepareCommand($url, $params);
@@ -67,6 +92,35 @@ function billing_client_get($url, $params = array()) {
       'User-Agent' => 'Billing Client module for Drupal',
       'Token' => variable_get('billing_client_token'),
     )
+  );
+  $url = variable_get('billing_client_api_url') . '/' . $url;
+  $answer = drupal_http_request($url, $options);
+  if($answer->code == '200'){
+    if(!empty($answer->data)){
+      return json_decode($answer->data, TRUE);
+    }
+    return $answer->status_message;
+  }
+  else{
+    if(isset($answer->error)){
+      return $answer->error;
+    }
+    return FALSE;
+  }
+}
+
+function billing_client_post($url, $params = array()) {
+  
+  billing_client_prepareCommand($url, $params);
+  $options = array(
+    'method' => 'POST',
+    'headers' => array(
+      'Content-Type' => 'application/json',
+      'Accept' => '*/*',
+      'User-Agent' => 'Billing Client module for Drupal',
+      'Token' => variable_get('billing_client_token'),
+    ),
+    'data' => json_encode($params),
   );
   $url = variable_get('billing_client_api_url') . '/' . $url;
   $answer = drupal_http_request($url, $options);
