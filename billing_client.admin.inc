@@ -53,7 +53,6 @@ function billing_client_users($form, &$form_state) {
     'roles' => array('data' => t('Roles')),
     'member_for' => array('data' => t('Member for'), 'field' => 'u.created', 'sort' => 'desc'),
     'access' => array('data' => t('Last access'), 'field' => 'u.access'),
-    'operations' => array('data' => t('Operations')),
   );
   $query = db_select('users', 'u');
   $query->condition('u.uid', 1, '>');
