@@ -38,6 +38,9 @@ function billing_client_settings($form, &$form_state) {
  * Manipulate user synchronisation.
  */
 function billing_client_users($form, &$form_state) {
+  $remote_users = billing_client_get('users');
+  drupal_set_message('<pre>'. print_r($remote_users,true). '</pre>');
+  
   $header = array(
     'username' => array('data' => t('Username'), 'field' => 'u.name'),
     'status' => array('data' => t('Status'), 'field' => 'u.status'),
@@ -78,7 +81,6 @@ function billing_client_users($form, &$form_state) {
       'roles' => theme('item_list', array('items' => $users_roles)),
       'member_for' => format_interval(REQUEST_TIME - $account->created),
       'access' => $account->access ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->access))) : t('never'),
-      'operations' => array('data' => array('#type' => 'link', '#title' => t('edit'), '#href' => "user/$account->uid/edit", '#options' => array('query' => $destination))),
     );
   }
 
@@ -87,6 +89,11 @@ function billing_client_users($form, &$form_state) {
     '#header' => $header,
     '#options' => $options,
     '#empty' => t('No people available.'),
+  );
+  
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Sync'),
   );
   $form['pager'] = array('#markup' => theme('pager'));
 
