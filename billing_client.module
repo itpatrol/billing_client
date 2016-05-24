@@ -29,7 +29,12 @@ function billing_client_menu() {
 function billing_client_settings($form, &$form_state) {
   if(variable_get('billing_client_token')){
     $answer = billing_client_get('ping');
-  drupal_set_message('<pre>' . print_r($answer, true) .'</pre>');
+    if(isset($answer['message'])){
+      drupal_set_message(t('API is online'));
+    }
+    else{
+      drupal_set_message(t('API is offline'), 'error');
+    }
   }
   $form['billing_client_token'] = array(
     '#type' => 'textfield',
