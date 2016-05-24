@@ -6,11 +6,31 @@
  */
 
 /**
+ * Implements hook_permission().
+ */
+function billing_client_permission() {
+  // Add permission to admin pgapi.
+  return array(
+    'billing access' => array(
+      'title' => t('Access to billing'),
+      'description' => t('User has access to order products'),
+    ),
+  );
+}
+
+/**
  * Implements hook_menu().
  */
 function billing_client_menu() {
   $items = array();
 
+  $items['billing'] = array(
+    'title' => 'Billing',
+    'page callback' => 'billing_client_goto',
+    'access arguments' => array('billing access'),
+    'menu_name' => 'user-menu',
+  );
+  
   $items['admin/config/system/billing_client'] = array(
     'title' => 'Billing Client settings',
     'description' => 'Configure Billing API integration.',
@@ -45,6 +65,36 @@ function billing_client_menu() {
   return $items;
 }
 
+
+/**
+ * Menu call back to redirect to billing.
+ */
+function billing_client_goto() {
+  global $user;
+ 
+  $access_token = db_select('billing_client_tokens', 'bct')
+    ->fields('bct')
+    ->condition('uid', $user->uid)
+    ->execute()
+    ->fetchObject();
+ 
+  if(!$access_token or $access_token->expire > time()) {
+    // No access token or already expired.
+    $session_token = billing_client_get('user/:name', 
+    array(
+      ':name' => $user->name,
+    ));
+    if(is_array($session_token)) {
+      billing_client_store_token($user->uid, $session_token['access_token'], $session_token['expire']);
+      
+      drupal_goto('http://billing.' . $_SERVER['SERVER_NAME'] . '/billing/login/' . $session_token['access_token']);
+    }
+    return t('Billing is not available temporary. Please contact support.');
+  }
+  
+  drupal_goto('http://billing.' . $_SERVER['SERVER_NAME'] . '/billing/login/' . $access_token->access_token);
+  
+}
 
 /**
  * Implements hook_user_login().
