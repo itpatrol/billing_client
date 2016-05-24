@@ -47,8 +47,6 @@ function billing_client_users($form, &$form_state) {
   
   $form_state['synced_users'] = $synced_users;
   
-  drupal_set_message('<pre>'. print_r($synced_users,true). '</pre>');
-  
   $header = array(
     'username' => array('data' => t('Username'), 'field' => 'u.name'),
     'status' => array('data' => t('Status'), 'field' => 'u.status'),
@@ -134,7 +132,9 @@ function billing_client_users_submit($form, &$form_state) {
       $request['email'] = $account->mail;
       $request['status'] = $account->status;
       $result = billing_client_put('user/:name', $request);
-      drupal_set_message('<pre>'. print_r($result,true). '</pre>');
+      if($result['name'] == $account->name) {
+        drupal_set_message(t('User !name synced', array('!name' => $account->name)));
+      }
     }
     else {
       // Insert/POST 
@@ -142,10 +142,10 @@ function billing_client_users_submit($form, &$form_state) {
       $request['email'] = $account->mail;
       $request['status'] = $account->status;
       $result = billing_client_post('user', $request);
-      drupal_set_message('<pre>'. print_r($result,true). '</pre>');
+      if($result['name'] == $account->name) {
+        drupal_set_message(t('User !name synced', array('!name' => $account->name)));
+      }
     }
     
   }
-  drupal_set_message('<pre>'. print_r($accounts,true). '</pre>');
-  drupal_set_message('<pre>'. print_r($form_state['accounts'],true). '</pre>');
 }
