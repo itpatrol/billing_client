@@ -45,6 +45,8 @@ function billing_client_users($form, &$form_state) {
     $synced_users[$user['name']] = $user;
   }
   
+  $form_state['synced_users'] = $synced_users;
+  
   drupal_set_message('<pre>'. print_r($synced_users,true). '</pre>');
   
   $header = array(
@@ -63,7 +65,7 @@ function billing_client_users($form, &$form_state) {
 
   $query = $query->extend('PagerDefault')->extend('TableSort');
   $query
-  ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
+  ->fields('u', array('uid', 'name', 'mail', 'status', 'created', 'access'))
     ->limit(50)
     ->orderByHeader($header)
     ->setCountQuery($count_query);
@@ -120,6 +122,30 @@ function billing_client_users($form, &$form_state) {
  */
 function billing_client_users_submit($form, &$form_state) {
   $accounts = array_filter($form_state['values']['accounts']);
+  $synced_users = $form_state['synced_users'];
+  
+  foreach($accounts as $uid) {
+    $request = array();
+    $account = $form_state['accounts'][$uid];
+    if(isset($synced_users[$account->name])){
+      // Update/PUT
+      $request[':name'] = $account->name;
+      $request['name'] = $account->name;
+      $request['email'] = $account->mail;
+      $request['status'] = $account->status;
+      $result = billing_client_put('user/:name', $request);
+      drupal_set_message('<pre>'. print_r($result,true). '</pre>');
+    }
+    else {
+      // Insert/POST 
+      $request['name'] = $account->name;
+      $request['email'] = $account->mail;
+      $request['status'] = $account->status;
+      $result = billing_client_post('user', $request);
+      drupal_set_message('<pre>'. print_r($result,true). '</pre>');
+    }
+    
+  }
   drupal_set_message('<pre>'. print_r($accounts,true). '</pre>');
   drupal_set_message('<pre>'. print_r($form_state['accounts'],true). '</pre>');
 }
