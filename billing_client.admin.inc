@@ -110,3 +110,11 @@ function billing_client_users($form, &$form_state) {
 
   return $form;
 }
+
+/**
+ * Submit handler for billing_client_users.
+ */
+function billing_client_users_submit($form, &$form_state) {
+  $accounts = array_filter($form_state['values']['accounts']);
+  drupal_set_message('<pre>'. print_r($form_state['values']['accounts'],true). '</pre>');
+}
