@@ -1,0 +1,92 @@
+<?php
+/**
+ * @file
+ * Billing client module.
+ *
+ */
+ 
+ 
+/**
+ * Implements hook_permission().
+ */
+function billing_client_invoices_permission() {
+  // Add permission to admin pgapi.
+  return array(
+    'billing invoices manager' => array(
+      'title' => t('Manage invoices'),
+      'description' => t('User has access to all invoices'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function billing_client_invoices_menu() {
+  $items = array();
+  $items['admin/reports/invoices'] = array(
+    'title' => 'Billing Client invoices',
+    'description' => 'Display issued invoices.',
+    'page callback' => 'billing_client_invoices_history',
+    'access arguments' => array('billing invoices manager'),
+    'file' => 'billing_client_invoices.manage.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Get all availible transaction statuses
+ *
+ * Add hook_pgapi_transaction_status()
+ *
+ * @return array
+ */
+function billing_invoice_build_status() {
+  $status = array (
+    BILLING_INVOICE_PENDING   => t('pending'),
+    BILLING_INVOICE_COMPLETED => t('paid'),
+    BILLING_INVOICE_FAILED    => t('failed'),
+    BILLING_INVOICE_DENIED    => t('denied'),
+    BILLING_INVOICE_REFUNDED  => t('refunded'),
+    BILLING_INVOICE_CANCELED  => t('canceled'),
+    BILLING_INVOICE_RECEIVED  => t('received'),
+  );
+  // Return array with all statuses
+  return $status;
+}
+
+/**
+ * Return human-readable status name
+ *
+ * @param  $id
+ *   Status ID
+ * @return string
+ *   Status name
+ */
+function billing_invoice_get_status($status){
+  $status = billing_invoice_build_status();
+  if($status[$id]) {
+    return $status[$id];
+  }
+  return t('undefined status');
+}
+
+/**
+ * Return status ID by human-readable status name
+ *
+ * @param  $name
+ *   String with status name
+ * @return int
+ *   Status ID
+ */
+function billing_invoice_get_status_id($name) {
+  $name = drupal_strtolower(t($name));
+  $statuses = billing_invoice_build_status();
+  $status_id = array_search($name, $statuses);
+  if ($status_id) {
+    return $status_id;
+  }
+  return 0;
+}

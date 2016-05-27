@@ -1,0 +1,6 @@
+name = Billing Client Invoices
+description = Invoices to work with Billing Service.
+package = "Commerce"
+dependencies[] = altpager
+dependencies[] = billing_client
+core = 7.x
