@@ -12,13 +12,13 @@
  * @return string
  *   Formated price
  */
-function theme_billing_format_amount($price, $symbol, $position = FALSE) {
-  $output .= print_r($price,true);
-  if ($position) {
-    $output .= '<div class="price"><span class="symbol">' . $symbol . '</span> ' . $price . '</div>';
+function theme_billing_format_amount($variables) {
+  $output = '';
+  if ($variables['position']) {
+    $output .= '<div class="price"><span class="symbol">' . $variables['symbol'] . '</span> ' . $variables['amount'] . '</div>';
   }
   else {
-    $output .= '<div class="price">' . $price . '<span class="symbol">' . $symbol . '</span></div>';
+    $output .= '<div class="price">' . $variables['amount'] . '<span class="symbol">' . $variables['symbol'] . '</span></div>';
   }
   return $output;
 }
