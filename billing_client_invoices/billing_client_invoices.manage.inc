@@ -102,9 +102,25 @@ function billing_invoices_create_invoice($form, &$form_state) {
 }
 
 /**
+ * Validate handler for billing_invoices_create_invoice.
+ */
+function billing_invoices_create_invoice_validate($form, &$form_state) {
+  $remote_user = billing_client_get('user/:name', array(':name' => $form_state['values']['name']));
+  if(!is_array($remote_user)) {
+    form_set_error('name', t('User !name is not synced. Please sync it first.', array('!name' => $form_state['values']['name'])));
+  }
+}
+
+/**
  * Submit handler for billing_invoices_create_invoice.
  */
 function billing_invoices_create_invoice_submit($form, &$form_state) {
-  $remote_user = billing_client_get('user/:name', array(':name' => $form_state['values']['name']));
+  $params = array(
+    ':name' => $form_state['values']['name'],
+    'amount' => $form_state['values']['amount'], 
+    'title' => $form_state['values']['title'], 
+    'description' => $form_state['values']['description'], 
+  );
+  $answer = billing_client_post('user/:name/invoice', $params);
   drupal_set_message('<pre>' . print_r($remote_user, true). '</pre>');
 }
