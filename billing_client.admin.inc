@@ -48,7 +48,7 @@ function billing_client_users($form, &$form_state) {
   
   $synced_users = array();
   
-  if($remote_users){
+  if($remote_users && is_array($remote_users)){
     foreach($remote_users as $user) {
       $synced_users[$user['name']] = $user;
     }
