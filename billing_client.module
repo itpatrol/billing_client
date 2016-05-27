@@ -18,6 +18,19 @@ function billing_client_permission() {
   );
 }
 
+ * Implements hook_theme.
+ */
+function billing_theme() {
+
+  return array(
+    'billing_format_amount' => array(
+      'variables' => array('amount' => NULL, 'symbol' => NULL, 'position' => NULL),
+      'file' => 'billing_client.theme.inc',
+    ),
+  );
+}
+
+
 /**
  * Implements hook_menu().
  */
@@ -316,4 +329,13 @@ function billing_client_prepareCommand(&$command, &$params) {
       unset($params[$key]);
     }
   }
+}
+
+/**
+ * Format amount.
+ */
+function billing_format_amount($amount){
+  $symbol = '$';
+  $position = true; //RIght.
+  return theme('billing_format_amount', array('amount' => $amount, 'symbol' => $symbol, 'position' => $position));
 }
