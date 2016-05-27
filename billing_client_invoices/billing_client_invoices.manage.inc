@@ -49,7 +49,7 @@ function billing_client_invoices_history() {
     'href' => "admin/reports/invoices/add",
   );
 
-  $output['table'] = array(
+  $output['admin_links'] = array(
     '#theme' => 'links',
     '#links' => $admin_links,
   );
