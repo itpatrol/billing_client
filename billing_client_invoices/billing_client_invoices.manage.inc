@@ -71,7 +71,7 @@ function billing_client_invoices_history() {
 
 function billing_invoices_create_invoice($form, &$form_state) {
 
-  $form['uid'] = array(
+  $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Client'),
     '#size' => 30,
@@ -105,5 +105,6 @@ function billing_invoices_create_invoice($form, &$form_state) {
  * Submit handler for billing_invoices_create_invoice.
  */
 function billing_invoices_create_invoice_submit($form, &$form_state) {
-  drupal_set_message('<pre>' . print_r($form_state['values'], true). '</pre>');
+  $remote_user = billing_client_get('user/:name', array(':name' => $form_state['values']['name']));
+  drupal_set_message('<pre>' . print_r($remote_user, true). '</pre>');
 }
