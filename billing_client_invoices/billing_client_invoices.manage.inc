@@ -105,5 +105,5 @@ function billing_invoices_create_invoice($form, &$form_state) {
  * Submit handler for billing_invoices_create_invoice.
  */
 function billing_invoices_create_invoice_submit($form, &$form_state) {
-  drupal_set_messages('<pre>' . print_r($form_state['values'], true). '</pre>');
+  drupal_set_message('<pre>' . print_r($form_state['values'], true). '</pre>');
 }
