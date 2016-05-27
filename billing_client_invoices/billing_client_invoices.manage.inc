@@ -93,6 +93,11 @@ function billing_invoices_create_invoice($form, &$form_state) {
     '#title' => t('Description'),
   );
 
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Sync'),
+  );
+
   return $form;
 }
 
