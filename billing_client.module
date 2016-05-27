@@ -21,7 +21,7 @@ function billing_client_permission() {
 /*
  * Implements hook_theme.
  */
-function billing_theme() {
+function billing_client_theme() {
 
   return array(
     'billing_format_amount' => array(
