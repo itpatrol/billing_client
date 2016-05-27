@@ -25,7 +25,7 @@ function billing_client_invoices_history() {
     $row[] = array('data' => l('#' . $invoice['id'], 'billing/invoices/' . $invoice['id']));
     $row[] = array('data' => $username);
     $row[] = array('data' => $invoice['description']);
-    $row[] = array('data' => billing_format_amount($invoice['amount']) . $invoice['amount']);
+    $row[] = array('data' => billing_format_amount($invoice['amount']));
     $row[] = array('data' => $status);
     
     $links['view'] = array(
