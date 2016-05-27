@@ -4,27 +4,6 @@
  * Billing client module.
  *
  */
-// No payment information has been recieved.
-define('BILLING_INVOICE_PENDING', 1);
-
-// Payment has been completed and confirmed and money has been transfered.
-define('BILLING_INVOICE_COMPLETED', 2);
-
-// Payment failed.
-define('BILLING_INVOICE_FAILED', 3);
-
-//Payment has been denied.
-define('BILLING_INVOICE_DENIED', 4);
-
-// Payment has been refunded.
-define('BILLING_INVOICE_REFUNDED', 5);
-
-// Payment has been canceled.
-define('BILLING_INVOICE_CANCELED', 6);
-
-// Payment recieved but not confirmed.
-define('BILLING_INVOICE_RECEIVED', 7);
-
 
 /**
  * Implements hook_permission().
