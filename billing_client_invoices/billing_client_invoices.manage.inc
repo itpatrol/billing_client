@@ -15,7 +15,7 @@ function billing_client_invoices_history() {
     $status = billing_invoice_get_status($invoice['status']);
 
     $row = array();
-    $row[] = array('data' => format_date($invoice['created'], 'html_date'));
+    $row[] = array('data' => format_date($invoice['created'], 'short'));
     $row[] = array('data' => l('#' . $invoice['id'], 'billing/invoices/' . $invoice['id']));
     $row[] = array('data' => $invoice['description']);
     $row[] = array('data' => billing_format_amount($invoice['amount']));
