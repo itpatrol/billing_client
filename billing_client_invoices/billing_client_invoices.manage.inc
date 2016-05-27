@@ -122,5 +122,5 @@ function billing_invoices_create_invoice_submit($form, &$form_state) {
     'description' => $form_state['values']['description'], 
   );
   $answer = billing_client_post('user/:name/invoice', $params);
-  drupal_set_message('<pre>' . print_r($remote_user, true). '</pre>');
+  drupal_set_message('<pre>' . print_r($answer, true). '</pre>');
 }
