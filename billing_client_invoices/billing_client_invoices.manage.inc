@@ -12,18 +12,18 @@ function billing_client_invoices_history() {
   $invoices = billing_client_get('invoices');
   $rows = $links = array();
   foreach ($invoices as $invoice) {
-    $status = billing_invoice_get_status($invoice->status);
+    $status = billing_invoice_get_status($invoice['status']);
 
     $row = array();
-    $row[] = array('data' => format_date($invoice->created, 'html_date'));
-    $row[] = array('data' => l('#' . $invoice->id, 'billing/invoices/' . $invoice->id));
-    $row[] = array('data' => $invoice->description);
-    $row[] = array('data' => billing_format_amount($invoice->amount));
+    $row[] = array('data' => format_date($invoice['created'], 'html_date'));
+    $row[] = array('data' => l('#' . $invoice['id'], 'billing/invoices/' . $invoice['id']));
+    $row[] = array('data' => $invoice['description']);
+    $row[] = array('data' => billing_format_amount($invoice['amount']));
     $row[] = array('data' => $status);
     
     $links['view'] = array(
           'title' => t('View'),
-          'href' => "admin/reports/invoices/" . $invoice->id . "/view",
+          'href' => "admin/reports/invoices/" . $invoice['id'] . "/view",
         );
 
     $row[] = array(
