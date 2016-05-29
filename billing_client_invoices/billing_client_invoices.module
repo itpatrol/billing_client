@@ -24,8 +24,8 @@ define('BILLING_INVOICE_CANCELED', 6);
 
 // Payment recieved but not confirmed.
 define('BILLING_INVOICE_RECEIVED', 7);
- 
- 
+
+
 /**
  * Implements hook_permission().
  */
@@ -118,4 +118,27 @@ function billing_invoice_get_status_id($name) {
     return $status_id;
   }
   return 0;
+}
+
+
+/**
+ * Save invoice
+ *
+ * @param  array $invoice
+ *   - name: usernmame
+ *   - amount: invoice amount
+ *   - title: title
+ *   - description: description
+ */
+function billing_invoice_save(&$invoice) {
+  $params = array(
+    ':name' => $invoice['name'],
+    'amount' => $invoice['amount'],
+    'title' => $invoice['title'],
+    'description' => $invoice['description'],
+  );
+  $answer = billing_client_post('user/:name/invoice', $params);
+  $invoice['created'] = $answer['created'];
+  $invoice['changed'] = $answer['changed'];
+  $invoice['status'] = billing_invoice_get_status($answer['status']);
 }
