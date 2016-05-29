@@ -137,6 +137,9 @@ function billing_invoice_save(&$invoice) {
     'title' => $invoice['title'],
     'description' => $invoice['description'],
   );
+  if(isset($invoice['data'])) {
+    $params['data'] = $invoice['data'];
+  }
   $answer = billing_client_post('user/:name/invoice', $params);
   $invoice['created'] = $answer['created'];
   $invoice['changed'] = $answer['changed'];
