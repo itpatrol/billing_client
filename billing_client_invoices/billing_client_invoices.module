@@ -147,6 +147,7 @@ function billing_invoice_save(&$invoice) {
   if(array($answer) && !isset($answer['error'])){
     $invoice['created'] = $answer['created'];
     $invoice['changed'] = $answer['changed'];
+    $invoice['id'] = $answer['id'];
     $invoice['status'] = billing_invoice_get_status($answer['status']);
     return TRUE;
   }
