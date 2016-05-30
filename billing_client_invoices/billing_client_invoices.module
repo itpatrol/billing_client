@@ -129,6 +129,9 @@ function billing_invoice_get_status_id($name) {
  *   - amount: invoice amount
  *   - title: title
  *   - description: description
+ *
+ * @return bool
+ *   TRUE if success, FALSE if error happen
  */
 function billing_invoice_save(&$invoice) {
   $params = array(
