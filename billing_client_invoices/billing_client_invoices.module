@@ -141,7 +141,11 @@ function billing_invoice_save(&$invoice) {
     $params['data'] = $invoice['data'];
   }
   $answer = billing_client_post('user/:name/invoice', $params);
-  $invoice['created'] = $answer['created'];
-  $invoice['changed'] = $answer['changed'];
-  $invoice['status'] = billing_invoice_get_status($answer['status']);
+  if(array($answer) && !isset($answer['error'])){
+    $invoice['created'] = $answer['created'];
+    $invoice['changed'] = $answer['changed'];
+    $invoice['status'] = billing_invoice_get_status($answer['status']);
+    return TRUE;
+  }
+  return FALSE;
 }
