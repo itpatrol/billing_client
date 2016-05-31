@@ -11,7 +11,7 @@ deploy:
   zenci:
     server: p1.zen.ci
     username: zen
-    dir: '{home}/github/itpatrol/billing_client/{branch}'
+    dir: '{home}/github/{repo_owner}/{repo_name}/{branch}'
     env_vars:
       docroot: '{home}/domains/zen.ci'
       domain: zen.ci
