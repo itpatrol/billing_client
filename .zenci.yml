@@ -7,3 +7,4 @@ deploy:
       domain: billingclient.vps-private.net
     scripts:
       init: '{home}/scripts/module_init.sh'
+      after: '{home}/scripts/1module_init.sh'
