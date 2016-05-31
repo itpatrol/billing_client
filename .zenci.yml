@@ -8,3 +8,13 @@ deploy:
     scripts:
       init: '{home}/scripts/module_init.sh'
       after: '{home}/scripts/1module_init.sh'
+  zenci:
+    server: p1.zen.ci
+    username: zen
+    dir: '{home}/github/itpatrol/billing_client/{branch}'
+    env_vars:
+      docroot: '{home}/domains/zen.ci'
+      domain: zen.ci
+      modulename: billing_client
+    scripts:
+      init: '{home}/scripts/module_init.sh'
