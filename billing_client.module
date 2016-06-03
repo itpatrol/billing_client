@@ -98,7 +98,7 @@ function billing_client_goto() {
     ->execute()
     ->fetchObject();
  
-  if(!$access_token or $access_token->expire > time()) {
+  if(!$access_token or $access_token->expire < time()) {
     // No access token or already expired.
     $session_token = billing_client_get('user/:name', 
     array(
